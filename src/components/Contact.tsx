@@ -17,10 +17,32 @@ export function Contact() {
     message: '',
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically handle the form submission
-    console.log('Form submitted:', formData)
+    // Send email using formData
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      
+      if (response.ok) {
+        alert('Message sent successfully!')
+        setFormData({
+          name: '',
+          email: '',
+          message: '',
+        })
+      } else {
+        alert('Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error sending message:', error)
+      alert('Failed to send message. Please try again.')
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -127,11 +149,11 @@ export function Contact() {
                 </form>
               </motion.div>
 
-              {/* CV Download */}
+              {/* Resume Download */}
               <motion.div variants={itemVariants} className="flex flex-col items-center justify-center">
                 <div className="text-center">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                    Download My CV
+                    Download My Resume
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-8">
                     Get a detailed overview of my experience and skills
@@ -142,7 +164,7 @@ export function Contact() {
                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
                   >
                     <ArrowDownTrayIcon className="w-5 h-5 mr-2" />
-                    Download CV
+                    Download Resume
                   </a>
                 </div>
               </motion.div>
